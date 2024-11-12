@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FastAPI Greeting App</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        max-width: 600px;
+        margin: 50px auto;
+        text-align: center;
+      }
+      input {
+        padding: 10px;
+        margin: 5px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+      }
+      button {
+        padding: 10px 20px;
+        background-color: #4caf50;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+      }
+      button:hover {
+        background-color: #45a049;
+      }
+      .result {
+        margin-top: 20px;
+        font-size: 1.2em;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Welcome to FastAPI Greeting App</h1>
+
+    <!-- Form for the first API: / -->
+    <div>
+      <h2>Say Hello</h2>
+      <input type="text" id="nameInput" placeholder="Enter your name" />
+      <button onclick="sayHello()">Greet Me</button>
+      <div class="result" id="helloResult"></div>
+    </div>
+
+    <hr />
+
+    <!-- Form for the second API: /hello/{name} -->
+    <div>
+      <h2>Say Hello with Age</h2>
+      <input type="text" id="nameWithAgeInput" placeholder="Enter your name" />
+      <input
+        type="number"
+        id="ageInput"
+        placeholder="Enter your age (optional)"
+      />
+      <button onclick="sayHelloWithAge()">Greet Me with Age</button>
+      <div class="result" id="helloAgeResult"></div>
+    </div>
+
+    <script>
+      const baseURL = "https://tp-fastapi-pds.onrender.com";
+
+      // Function for the first endpoint
+      async function sayHello() {
+        const name = document.getElementById("nameInput").value;
+        if (!name) {
+          alert("Please enter your name");
+          return;
+        }
+
+        try {
+          const response = await fetch(`${baseURL}/?name=${name}`);
+          const data = await response.json();
+          document.getElementById("helloResult").innerText = data.Hello;
+        } catch (error) {
+          console.error("Error:", error);
+          alert("Failed to fetch greeting");
+        }
+      }
+
+      // Function for the second endpoint
+      async function sayHelloWithAge() {
+        const name = document.getElementById("nameWithAgeInput").value;
+        const age = document.getElementById("ageInput").value;
+
+        if (!name) {
+          alert("Please enter your name");
+          return;
+        }
+
+        let url = `${baseURL}/hello/${name}`;
+        if (age) {
+          url += `?age=${age}`;
+        }
+
+        try {
+          const response = await fetch(url);
+          const data = await response.json();
+          document.getElementById("helloAgeResult").innerText = data.message;
+        } catch (error) {
+          console.error("Error:", error);
+          alert("Failed to fetch greeting with age");
+        }
+      }
+    </script>
+  </body>
+</html>
